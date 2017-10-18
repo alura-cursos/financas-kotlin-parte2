@@ -1,18 +1,21 @@
 package br.com.alura.financask.ui.activity
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.DatePicker
 import br.com.alura.financask.R
+import br.com.alura.financask.extension.formataParaBrasileiro
 import br.com.alura.financask.model.Tipo
 import br.com.alura.financask.model.Transacao
 import br.com.alura.financask.ui.ResumoView
 import br.com.alura.financask.ui.adapter.ListaTransacoesAdapter
 import kotlinx.android.synthetic.main.activity_lista_transacoes.*
+import kotlinx.android.synthetic.main.form_transacao.view.*
 import java.math.BigDecimal
 import java.util.*
 
@@ -37,6 +40,26 @@ class ListaTransacoesActivity : AppCompatActivity() {
                                     view as ViewGroup,
                                     false)
 
+                    val ano = 2017
+                    val mes = 9
+                    val dia = 18
+
+                    val hoje = Calendar.getInstance()
+                    viewCriada.form_transacao_data
+                            .setText(hoje.formataParaBrasileiro())
+                    viewCriada.form_transacao_data
+                            .setOnClickListener {
+                                DatePickerDialog(this,
+                                        DatePickerDialog.OnDateSetListener { view, ano, mes, dia ->
+                                            val dataSelecionada = Calendar.getInstance()
+                                            dataSelecionada.set(ano, mes, dia)
+                                            viewCriada.form_transacao_data
+                                                    .setText(dataSelecionada.formataParaBrasileiro())
+                                        }
+                                        , ano, mes, dia)
+                                        .show()
+                            }
+
                     AlertDialog.Builder(this)
                             .setTitle(R.string.adiciona_receita)
                             .setView(viewCriada)
@@ -48,7 +71,7 @@ class ListaTransacoesActivity : AppCompatActivity() {
 
     private fun configuraResumo(transacoes: List<Transacao>) {
         val view: View = window.decorView
-        val resumoView = ResumoView(this,view, transacoes)
+        val resumoView = ResumoView(this, view, transacoes)
         resumoView.atualiza()
     }
 
