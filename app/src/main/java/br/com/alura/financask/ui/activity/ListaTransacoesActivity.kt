@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import br.com.alura.financask.R
 import br.com.alura.financask.extension.formataParaBrasileiro
 import br.com.alura.financask.model.Tipo
@@ -80,7 +81,16 @@ class ListaTransacoesActivity : AppCompatActivity() {
                                         val categoriaEmTexto = viewCriada
                                                 .form_transacao_categoria.selectedItem.toString()
 
-                                        val valor = BigDecimal(valorEmTexto)
+
+                                        val valor = try {
+                                            BigDecimal(valorEmTexto)
+                                        } catch (exception: NumberFormatException) {
+                                            Toast.makeText(this,
+                                                    "Falha na conversão de valor",
+                                                    Toast.LENGTH_LONG)
+                                                    .show()
+                                            BigDecimal.ZERO
+                                        }
 
                                         val formatoBrasileiro = SimpleDateFormat("dd/MM/yyyy")
                                         val dataConvertida: Date = formatoBrasileiro.parse(dataEmTexto)
