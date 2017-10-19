@@ -74,7 +74,33 @@ class ListaTransacoesActivity : AppCompatActivity() {
                     AlertDialog.Builder(this)
                             .setTitle(R.string.adiciona_receita)
                             .setView(viewCriada)
-                            .setPositiveButton("Adicionar", null)
+                            .setPositiveButton("Adicionar",
+                                    { dialogInterface, i ->
+                                        val valorEmTexto = viewCriada
+                                                .form_transacao_valor.text.toString()
+                                        val dataEmTexto = viewCriada
+                                                .form_transacao_data.text.toString()
+                                        val categoriaEmTexto = viewCriada
+                                                .form_transacao_categoria.selectedItem.toString()
+
+                                        val valor = BigDecimal(valorEmTexto)
+
+                                        val formatoBrasileiro = SimpleDateFormat("dd/MM/yyyy")
+                                        val dataConvertida: Date = formatoBrasileiro.parse(dataEmTexto)
+                                        val data = Calendar.getInstance()
+                                        data.time = dataConvertida
+
+                                        val transacaoCriada = Transacao(tipo = Tipo.RECEITA,
+                                                valor = valor,
+                                                data = data,
+                                                categoria = categoriaEmTexto)
+
+                                        Toast.makeText(this, "${transacaoCriada.valor} - " +
+                                                "${transacaoCriada.categoria} - " +
+                                                "${transacaoCriada.data.formataParaBrasileiro()} - " +
+                                                "${transacaoCriada.tipo}", Toast.LENGTH_LONG).show()
+
+                                    })
                             .setNegativeButton("Cancelar", null)
                             .show()
                 }
